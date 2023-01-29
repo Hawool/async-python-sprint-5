@@ -19,3 +19,17 @@ class RaiseHttpException:
             raise HTTPException(
                 status_code=status.HTTP_410_GONE, detail=APIAnswers.GONE
             )
+
+    @staticmethod
+    def check_params_isnt_none(**kwargs):
+        if all(value is None for value in kwargs.values()):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail=APIAnswers.ONE_PARAM
+            )
+
+    @staticmethod
+    def check_is_one(item):
+        if isinstance(item, list) and len(item) != 1:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail=APIAnswers.MANY_MATCHES
+            )

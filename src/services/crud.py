@@ -2,7 +2,7 @@ from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
-from sqlalchemy import select, update
+from sqlalchemy import select, update, and_
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.db import Base
@@ -23,9 +23,14 @@ class RepositoryDB(Repository, Generic[ModelType, CreateSchemaType, UpdateSchema
         return results.scalar_one_or_none()
 
     async def get_multi(
-        self, db: AsyncSession, *, skip=0, limit=100
+        self, db: AsyncSession, *, skip=0, limit=100, **kwargs
     ) -> List[ModelType]:
-        statement = select(self._model).offset(skip).limit(limit)
+        statement = select(self._model)
+        filters = [getattr(self._model, key) == value for key, value in kwargs.items()]
+        if filters:
+            statement = statement.where(and_(*filters))
+        statement = statement.offset(skip).limit(limit)
+        # statement = select(self._model).filter().offset(skip).limit(limit)
         results = await db.execute(statement=statement)
         return results.scalars().all()
 

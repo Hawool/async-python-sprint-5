@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 
 from src.api.v1.file_storage import storage_router
+from src.api.v1.ping import ping_router
 from src.core.config import app_settings
 from src.core.logger import LOGGING
 from src.schemas.user import UserRead, UserCreate, UserUpdate
@@ -45,6 +46,7 @@ app.include_router(
 )
 
 app.include_router(storage_router)
+app.include_router(ping_router)
 
 if __name__ == '__main__':
     logger.info('Server started')
