@@ -7,6 +7,7 @@ from starlette.responses import FileResponse
 from src.core.config import app_settings
 from src.db.db import get_session
 from src.helpers.raising_http_excp import RaiseHttpException
+from src.helpers.utils import calculate_file_size
 from src.models.user import User
 from src.schemas.file import FileCreate
 from src.services.file import file_crud
@@ -44,7 +45,7 @@ async def get_files(
 
 
 @storage_router.get('/download', status_code=200)
-async def save_file(
+async def download_file(
         file_id: int | None = None,
         file_name: str | None = None,
         db: AsyncSession = Depends(get_session),
@@ -61,4 +62,16 @@ async def save_file(
         file_model = query[0]
 
     return FileResponse(file_model.path, media_type='application/octet-stream', filename=file_model.name)
+
+
+@storage_router.get('/usage_memory', status_code=200)
+async def usage_memory(
+        db: AsyncSession = Depends(get_session),
+        user: User = Depends(current_active_user)
+):
+
+    query = await file_crud.get_multi(db=db, user_id=str(user.id))
+    RaiseHttpException.check_is_exist(query)
+
+    return {'files': calculate_file_size(query)}
 

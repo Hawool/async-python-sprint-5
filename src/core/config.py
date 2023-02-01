@@ -1,7 +1,8 @@
 import os
 from logging import config as logging_config
+from typing import Optional, Any
 
-from pydantic import BaseSettings, PostgresDsn
+from pydantic import BaseSettings, PostgresDsn, validator
 
 from src.core.logger import LOGGING
 
@@ -18,7 +19,25 @@ class AppSettings(BaseSettings):
     PORT: int = 9000
     SECRET: str = 'secret'
 
-    DATABASE_DSN: PostgresDsn = 'postgresql+asyncpg://postgres:postgres@localhost:5555/postgres'
+    POSTGRES_HOST: str
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_DB: str
+    POSTGRES_PORT: str
+    DATABASE_DSN: Optional[PostgresDsn] = None
+
+    @validator("DATABASE_DSN", pre=True)
+    def assemble_db_connection(cls, value: Optional[str], values: dict[str, Any]) -> Any:
+        if isinstance(value, str):
+            return value
+        return PostgresDsn.build(  # type: ignore
+            scheme="postgresql+asyncpg",
+            user=values.get("POSTGRES_USER"),
+            password=values.get("POSTGRES_PASSWORD"),
+            host=values.get("POSTGRES_HOST"),
+            port=values.get("POSTGRES_PORT"),
+            path=f"/{values.get('POSTGRES_DB') or ''}",
+        )
 
     FILE_FOLDER: str = 'files/'
 
