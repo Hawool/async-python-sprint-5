@@ -1,7 +1,3 @@
-docker network create file_storage_network
-docker build -f dockerization/Dockerfile . -t file_storage
-docker-compose -f dockerization/docker-compose.yaml up -d
-
 # Проектное задание пятого спринта
 
 Спроектировать и разработать файловое хранилище, которое позволяет хранить различные типы файлов - документы, фотографии, другие данные.
