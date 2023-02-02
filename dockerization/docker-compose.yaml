@@ -3,11 +3,11 @@ services:
   file_storage_api:
     image: file_storage:latest
     container_name: file_storage_api
-#    restart: always
     env_file:
       - ../.env
     environment:
       - POSTGRES_HOST=file_storage_postgres
+      - POSTGRES_PORT=5432
     depends_on:
       - file_storage_postgres
     ports:
@@ -24,8 +24,7 @@ services:
       POSTGRES_DB: "postgres"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
-#    ports:
-#      - "5555:5432"
+
     networks:
       - fs_network
 

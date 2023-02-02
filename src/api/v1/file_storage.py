@@ -1,6 +1,6 @@
 import shutil
 
-from fastapi import APIRouter, Depends, UploadFile
+from fastapi import APIRouter, Depends, UploadFile, File
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import FileResponse
 
@@ -18,8 +18,8 @@ storage_router = APIRouter(prefix='/file', tags=['File storage'])
 
 @storage_router.post('', status_code=201, response_model=FileCreate)
 async def save_file(
-        file: UploadFile,
         name: str,
+        file: UploadFile = File(),
         db: AsyncSession = Depends(get_session),
         user: User = Depends(current_active_user)
 ) -> FileCreate:
