@@ -1,6 +1,6 @@
 import os
 from logging import config as logging_config
-from typing import Optional, Any
+from typing import Any, Optional
 
 from pydantic import BaseSettings, PostgresDsn, validator
 
@@ -27,10 +27,10 @@ class AppSettings(BaseSettings):
     DATABASE_DSN: Optional[PostgresDsn] = None
 
     @validator("DATABASE_DSN", pre=True)
-    def assemble_db_connection(cls, value: Optional[str], values: dict[str, Any]) -> Any:
+    def assemble_db_connection(cls, value: Optional[str], values: dict[str, Any]) -> Any:  # type: ignore
         if isinstance(value, str):
             return value
-        return PostgresDsn.build(  # type: ignore
+        return PostgresDsn.build(
             scheme="postgresql+asyncpg",
             user=values.get("POSTGRES_USER"),
             password=values.get("POSTGRES_PASSWORD"),

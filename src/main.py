@@ -9,8 +9,8 @@ from src.api.v1.file_storage import storage_router
 from src.api.v1.ping import ping_router
 from src.core.config import app_settings
 from src.core.logger import LOGGING
-from src.schemas.user import UserRead, UserCreate, UserUpdate
-from src.services.user_manager import fastapi_users_router, auth_backend
+from src.schemas.user import UserCreate, UserRead, UserUpdate
+from src.services.user_manager import auth_backend, fastapi_users_router
 
 dictConfig(LOGGING)
 logger = logging.getLogger('root')

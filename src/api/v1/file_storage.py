@@ -1,6 +1,6 @@
 import shutil
 
-from fastapi import APIRouter, Depends, UploadFile, File
+from fastapi import APIRouter, Depends, File, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import FileResponse
 
@@ -74,4 +74,3 @@ async def usage_memory(
     RaiseHttpException.check_is_exist(query)
 
     return {'files': calculate_file_size(query)}
-

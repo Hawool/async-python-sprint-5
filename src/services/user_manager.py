@@ -4,8 +4,9 @@ from logging.config import dictConfig
 from typing import Optional
 
 from fastapi import Depends, Request
-from fastapi_users import BaseUserManager, UUIDIDMixin, FastAPIUsers
-from fastapi_users.authentication import BearerTransport, JWTStrategy, AuthenticationBackend
+from fastapi_users import BaseUserManager, FastAPIUsers, UUIDIDMixin
+from fastapi_users.authentication import (AuthenticationBackend,
+                                          BearerTransport, JWTStrategy)
 
 from src.core.logger import LOGGING
 from src.models.user import User, get_user_db
