@@ -39,7 +39,8 @@ class AppSettings(BaseSettings):
             path=f"/{values.get('POSTGRES_DB') or ''}",
         )
 
-    FILE_FOLDER: str = 'files/'
+    FILE_FOLDER: str = 'files'
+    MAX_FILE_SIZE: int = 1024 * 1024  # 1 Mb
 
     class Config:
         env_file = '../.env', '.env'

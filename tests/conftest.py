@@ -5,7 +5,7 @@ from typing import AsyncGenerator, Generator
 import pytest
 import pytest_asyncio
 from _pytest.monkeypatch import MonkeyPatch
-from httpx import AsyncClient, DigestAuth
+from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import (AsyncConnection, AsyncEngine, AsyncSession,
                                     AsyncTransaction, create_async_engine)
 from sqlalchemy.orm import sessionmaker
@@ -14,12 +14,7 @@ from src.core.config import app_settings
 from src.db.db import Base
 from src.main import app
 from src.models.file import FileModel
-from src.models.user import User
-from src.services.user_manager import get_jwt_strategy
-# from src.models.urls import UrlModel
 from tests.db_utils import create_db
-
-app_settings.DATABASE_DSN = f'{app_settings.DATABASE_DSN}_test'
 
 
 @pytest.fixture(scope='session')
@@ -41,9 +36,6 @@ async def engine() -> AsyncGenerator[AsyncEngine, None]:
         yield engine
     finally:
         await engine.dispose()
-        # async with engine.begin() as conn:
-        #     await conn.run_sync(Base.metadata.drop_all)
-        # await engine.dispose()
 
 
 @pytest_asyncio.fixture(scope='session')
@@ -121,7 +113,7 @@ async def test_user_id(client, test_session):
 async def test_file(test_session, test_user_id):
     file = FileModel(
         user_id=test_user_id,
-        path='/file',
+        path='conftest.py',
         name='fiylishe'
     )
     test_session.add(file)
@@ -129,4 +121,6 @@ async def test_file(test_session, test_user_id):
     return file
 
 
-
+@pytest_asyncio.fixture()
+async def fake_calculate_files():
+    return 10

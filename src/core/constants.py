@@ -3,3 +3,4 @@ class APIAnswers:
     GONE = 'Gone'
     ONE_PARAM = 'One of the fields must be filled'
     MANY_MATCHES = 'More than one match was found'
+    BIG_FILE = 'File more than 1 Mb'

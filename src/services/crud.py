@@ -50,12 +50,11 @@ class RepositoryDB(Repository, Generic[ModelType, CreateSchemaType, UpdateSchema
     ) -> ModelType:
 
         obj_in_data = jsonable_encoder(obj_in)
-        obj_in_data_without_none = {k: v for k, v in obj_in_data.items() if v is not None}
 
         await db.execute(
             update(self._model).
             where(self._model.id == db_obj.id).
-            values(obj_in_data_without_none)
+            values(obj_in_data)
         )
         await db.commit()
         return db_obj

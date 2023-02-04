@@ -11,10 +11,10 @@ services:
     depends_on:
       - file_storage_postgres
     ports:
-      - '9010:9010'
+      - "${APP_PUBLIC_PORT:-9010}:${APP_PUBLIC_PORT:-9010}"
     expose:
-      - '9010'
-    command: 'sh entrypoint.sh'
+      - "${APP_PUBLIC_PORT:-9010}"
+    command: "sh entrypoint.sh"
     networks:
       - fs_network
 

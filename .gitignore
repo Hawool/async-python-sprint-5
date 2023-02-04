@@ -139,4 +139,4 @@ dmypy.json
 /static/
 /.env
 
-/files*
+/files/*

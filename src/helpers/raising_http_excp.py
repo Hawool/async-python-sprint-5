@@ -1,6 +1,7 @@
-from fastapi import HTTPException
+from fastapi import HTTPException, UploadFile
 from starlette import status
 
+from src.core.config import app_settings
 from src.core.constants import APIAnswers
 
 
@@ -33,3 +34,12 @@ class RaiseHttpException:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST, detail=APIAnswers.MANY_MATCHES
             )
+
+    @staticmethod
+    def check_uploadfile_size(file: UploadFile):
+        file.file.seek(0, 2)  # устанавливает курсов в конец
+        if file.file.tell() > app_settings.MAX_FILE_SIZE:
+            raise HTTPException(
+                status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, detail=APIAnswers.BIG_FILE
+            )
+        file.file.seek(0)  # возвращает курсов в начало для последующего чтения
